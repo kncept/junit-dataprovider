@@ -1,12 +1,14 @@
-*.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Gradle main output directory
+build
 
-# Package Files #
-*.jar
-*.war
-*.ear
+#gradlew tools
+.gradle
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+
+# elipse
+.classpath
+.project
+.settings/
+
+/bin/

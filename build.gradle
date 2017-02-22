@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+ 
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'com.kncept.junit5.dataprovider'
+version = '0.9-SNAPSHOT'
+
+jar.manifest {
+	attributes(
+		'Implementation-Title': project.name,
+		'Implementation-Vendor' : 'kncept',
+		'Implementation-Version': project.version,
+		'Implementation-Author': 'Nicholas Krul', //non standard
+		'Created-By': System.getProperty('java.version'),
+		//'Built-By': System.getProperty('user.name'),
+		//'Built-Host': getHostname(),
+		'Built-Date': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+		'Source-Compatibility': project.sourceCompatibility,
+		'Target-Compatibility': project.targetCompatibility
+	)
+}
+
+task wrapper(type: Wrapper) {
+	description = 'gradlew'
+	gradleVersion = '3.4'
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M3'
+}
