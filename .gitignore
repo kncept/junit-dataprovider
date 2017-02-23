@@ -12,3 +12,11 @@ build
 .settings/
 
 /bin/
+
+# certificate files
+*.asc
+*.gpg
+
+#Certificate information
+gradle.properties
+

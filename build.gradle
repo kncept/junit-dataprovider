@@ -13,11 +13,25 @@ apply plugin: 'idea'
  
 apply plugin: 'org.junit.platform.gradle.plugin'
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'com.kncept.junit5.dataprovider'
 version = '0.9-SNAPSHOT'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 
 jar.manifest {
 	attributes(
@@ -26,13 +40,23 @@ jar.manifest {
 		'Implementation-Version': project.version,
 		'Implementation-Author': 'Nicholas Krul', //non standard
 		'Created-By': System.getProperty('java.version'),
-		//'Built-By': System.getProperty('user.name'),
+		'Built-By': System.getProperty('user.name'),
 		//'Built-Host': getHostname(),
 		'Built-Date': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
 		'Source-Compatibility': project.sourceCompatibility,
 		'Target-Compatibility': project.targetCompatibility
 	)
 }
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+//Allow building but disable signing if the gpg config isn't available
+signing {
+    sign configurations.archives
+}
+signArchives.onlyIf {new File('gradle.properties').exists()}
 
 task wrapper(type: Wrapper) {
 	description = 'gradlew'
