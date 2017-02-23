@@ -1,4 +1,4 @@
-# junit-dataprovider
+# junit-dataprovider [![Build Status](https://travis-ci.org/kncept/junit-dataprovider.svg?branch=master)](https://travis-ci.org/kncept/junit-dataprovider)
 Dataprovider like functionality for JUnit5.
 
 See [ExampleUseCasesTest](src/test/java/integTest/com/kncept/junit/dataprovider/ExampleUseCasesTest.java) for an example.
