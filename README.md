@@ -5,6 +5,8 @@ See [ExampleUseCasesTest](src/test/java/integTest/com/kncept/junit/dataprovider/
 
 This plugin uses the DynamicTest functionlaity of Junit5 to replicate the old JUnit4 @Parameterized or TestNG DataProvider style of tests.
 
-Simply ensure that the distribution jar is on the test classpath, then use it as in the example
+Simply ensure that the distribution jar is on the test classpath, then use it as in the example.
+
+This plugin uses the same license as (most of) JUnit5.
 
 Enjoy.

@@ -1,11 +1,14 @@
 package com.kncept.junit.dataprovider.util;
 
+import static com.kncept.junit.dataprovider.util.ReflectionUtil.findMethodsWithAnnonation;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class ReflectionUtilTest {
@@ -13,26 +16,26 @@ public class ReflectionUtilTest {
 	
 	@Test
 	public void noAnnotationsToFind() {
-		List<Method> methods = ReflectionUtil.findMethodsWithAnnonation(TypeZero.class, TestAnnotation.class);
-		Assertions.assertTrue(methods.isEmpty());
+		List<Method> methods = findMethodsWithAnnonation(TypeZero.class, TestAnnotation.class);
+		assertTrue(methods.isEmpty());
 	}
 	
 	@Test
 	public void canFindAnnotations() {
-		List<Method> methods = ReflectionUtil.findMethodsWithAnnonation(TypeOne.class, TestAnnotation.class);
-		Assertions.assertEquals(1,  methods.size());
+		List<Method> methods = findMethodsWithAnnonation(TypeOne.class, TestAnnotation.class);
+		assertEquals(1,  methods.size());
 	}
 	
 	@Test
 	public void canFindMultipleAnnotations() {
-		List<Method> methods = ReflectionUtil.findMethodsWithAnnonation(TypeTwo.class, TestAnnotation.class);
-		Assertions.assertEquals(2,  methods.size());
+		List<Method> methods = findMethodsWithAnnonation(TypeTwo.class, TestAnnotation.class);
+		assertEquals(2,  methods.size());
 	}
 	
 	@Test
 	public void canFindAnnotationsOnOverriddenMethods() {
-		List<Method> methods = ReflectionUtil.findMethodsWithAnnonation(TypeThree.class, TestAnnotation.class);
-		Assertions.assertEquals(2,  methods.size());
+		List<Method> methods = findMethodsWithAnnonation(TypeThree.class, TestAnnotation.class);
+		assertEquals(2,  methods.size());
 	}
 	
 	

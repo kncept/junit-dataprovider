@@ -1,5 +1,8 @@
 package com.kncept.junit.dataprovider.util;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -7,6 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * This class is considered internal.
+ * 
+ * <p> There should be no need for API consumers to use this class
+ *
+ */
 public final class ReflectionUtil {
 	private ReflectionUtil(){}
 
@@ -30,33 +39,55 @@ public final class ReflectionUtil {
 		return methods;
 	}
 	
+	/**
+	 * Static type checking for the ability to get/create an iterator
+	 * @param type the type to check
+	 * @return is this type is known to be able to be iterated over
+	 */
 	public static boolean canGetIterator(Class<?> type) {
 		return
 				Iterable.class.isAssignableFrom(type) ||
 				Stream.class.isAssignableFrom(type) ||
-				Iterator.class.isAssignableFrom(type);
+				Iterator.class.isAssignableFrom(type) ||
+				type.isArray();
 	}
 	
-	public static Iterator toIterator(Object value) {
+	/**
+	 * Converts {@code value} to an iterator
+	 * @param value an iterator, iterable, stream or array
+	 * @return an iterator
+	 * @throws IllegalArgumentException throws in the conversion is unknown
+	 */
+	public static Iterator toIterator(Object value) throws IllegalArgumentException {
 		if (value instanceof Iterator)
 			return (Iterator)value;
 		if (value instanceof Iterable)
 			return ((Iterable)value).iterator();
 		if (value instanceof Stream)
 			return ((Stream)value).iterator();
-		throw new IllegalArgumentException("input value must be of type Iterator, Iterable or Stream");
+		if (value.getClass().isArray()) {
+			return asList((Object[])value).iterator();
+		}
+		throw new IllegalArgumentException("input value must be of type Iterator, Iterable, Stream or Object[]");
 	}
 	
-	public static Object[] toArray(Object arrayObject) {
-		if (arrayObject.getClass().isArray())
-			return (Object[]) arrayObject;
-		if (canGetIterator(arrayObject.getClass())) {
+	/**
+	 * Converts {@code value} to an object array
+	 * @param value an iterator, iterable, stream or array
+	 * @return an Object[]
+	 * @throws IllegalArgumentException throws in the conversion is unknown
+	 */
+	
+	public static Object[] toArray(Object value) throws IllegalArgumentException{
+		if (value.getClass().isArray())
+			return (Object[]) value;
+		if (canGetIterator(value.getClass())) {
 			List<Object> list = new ArrayList<>();
-			Iterator iterator = toIterator(arrayObject);
+			Iterator iterator = toIterator(value);
 			while (iterator.hasNext())
 				list.add(iterator.next());
 			return list.toArray(new Object[list.size()]);
 		}
-		throw new IllegalArgumentException(String.format("Unable to coerce to an array: %s", arrayObject));
+		throw new IllegalArgumentException(format("Unable to coerce to an array: %s", value));
 	}
 }

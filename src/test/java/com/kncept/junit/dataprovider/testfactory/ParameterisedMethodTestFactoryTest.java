@@ -1,7 +1,11 @@
 package com.kncept.junit.dataprovider.testfactory;
 
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -23,18 +27,18 @@ public class ParameterisedMethodTestFactoryTest {
 	
 	@Test
 	public void canFindTestMethods() {
-		Assertions.assertEquals(3, testFactory.getParameterisedTestMethods().size());
+		assertEquals(3, testFactory.getParameterisedTestMethods().size());
 	}
 	
 	@Test
 	public void canFindSourceMethods() {
-		Assertions.assertEquals(1, testFactory.getParameterSourceMethods().size());
+		assertEquals(1, testFactory.getParameterSourceMethods().size());
 	}
 	
 	@Test
 	public void canLookupSourceMethods() {
 		Method sourceMethod = testFactory.parameterSourceMethod("source");
-		Assertions.assertNotNull(sourceMethod);
+		assertNotNull(sourceMethod);
 	}
 	
 	@Test
@@ -42,7 +46,7 @@ public class ParameterisedMethodTestFactoryTest {
 		IllegalArgumentException exception = Assertions.assertThrows(
 				IllegalArgumentException.class,
 				() -> testFactory.parameterSourceMethod("xxInvalidName"));
-		Assertions.assertEquals("No ParameterSource called xxInvalidName", exception.getMessage());
+		assertEquals("No ParameterSource called xxInvalidName", exception.getMessage());
 	}
 	
 	@Test
@@ -50,7 +54,7 @@ public class ParameterisedMethodTestFactoryTest {
 		String testName = testFactory.generateTestName(
 				getClass().getMethod("parameterisedTest", int.class),
 				new Object[]{1});
-		Assertions.assertEquals("parameterisedTest with display name 1", testName);
+		assertEquals("parameterisedTest with display name 1", testName);
 	}
 	
 	@Test
@@ -58,7 +62,7 @@ public class ParameterisedMethodTestFactoryTest {
 		String testName = testFactory.generateTestName(
 				getClass().getMethod("noDisplayName", int.class),
 				new Object[]{1});
-		Assertions.assertEquals("noDisplayName 1", testName);
+		assertEquals("noDisplayName 1", testName);
 	}
 	
 	@Test
@@ -66,7 +70,7 @@ public class ParameterisedMethodTestFactoryTest {
 		List<DynamicTest> tests = testFactory.createTests(
 				getClass().getMethod("parameterisedTest", int.class),
 				getClass().getMethod("paramSource"));
-		Assertions.assertEquals(2, tests.size()); 
+		assertEquals(2, tests.size()); 
 	}
 	
 	@Test
@@ -83,14 +87,14 @@ public class ParameterisedMethodTestFactoryTest {
 		List<DynamicTest> tests = testFactory.createTests(
 				getClass().getMethod("throwsException", int.class),
 				getClass().getMethod("paramSource"));
-		Assertions.assertThrows(
+		assertThrows(
 				TestException.class,
 				() ->tests.get(0).getExecutable().execute());
 	}
 	
 	@ParameterSource(name = "source")
 	public List<Object[]> paramSource() {
-		return Arrays.asList(
+		return asList(
 				new Object[]{1},
 				new Object[]{2}
 				);
