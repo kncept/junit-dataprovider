@@ -21,7 +21,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'com.kncept.junit5.dataprovider'
-version = '0.9-SNAPSHOT'
+version = '0.9-M3'
+
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -31,6 +32,11 @@ task javadocJar(type: Jar) {
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
+}
+
+task testSourcesJar(type: Jar) {
+    classifier = 'testsources'
+    from sourceSets.test.allSource
 }
 
 jar.manifest {
@@ -49,7 +55,7 @@ jar.manifest {
 }
 
 artifacts {
-    archives javadocJar, sourcesJar
+    archives javadocJar, sourcesJar, testSourcesJar
 }
 
 //Allow building but disable signing if the gpg config isn't available
@@ -66,6 +72,61 @@ task wrapper(type: Wrapper) {
 repositories {
 	mavenLocal()
 	mavenCentral()
+}
+
+//hoist properties if gradle.properties exists
+String username = null
+String password = null
+if (project.hasProperty('ossrhUsername')) {
+	username = ossrhUsername
+}
+if (project.hasProperty('ossrhPassword')) {
+	password = ossrhPassword
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: username, password: password)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: username, password: password)
+      }
+
+      pom.project {
+        name 'Junit Dataprovider'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A JUnit5 Parameterized implementation (Similar to TestNG DataProvider)'
+        url 'https://github.com/kncept/junit-dataprovider'
+
+        scm {
+          connection 'scm:https://github.com/kncept/junit-dataprovider.git'
+          developerConnection 'scm:https://github.com/kncept/junit-dataprovider.git'
+          url 'https://github.com/kncept/junit-dataprovider'
+        }
+
+        licenses {
+          license {
+            name 'Eclipse Public License - v 1.0'
+            url 'https://github.com/kncept/junit-dataprovider/blob/master/LICENSE'
+          }
+        }
+
+        developers {
+          developer {
+            id 'nkrul'
+            name 'Nicholas Krul'
+            email 'nicholas.krul@gmail.com'
+          }
+        }
+      }
+    }
+  }
 }
 
 dependencies {
