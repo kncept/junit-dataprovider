@@ -4,7 +4,10 @@ import static com.kncept.junit.dataprovider.util.ReflectionUtil.findMethodsWithA
 import static com.kncept.junit.dataprovider.util.ReflectionUtil.toArray;
 import static com.kncept.junit.dataprovider.util.ReflectionUtil.toIterator;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 
@@ -77,7 +81,7 @@ public class ParameterisedMethodTestFactory {
 			List<DynamicTest> tests = new ArrayList<>();
 			while(iterator.hasNext()) {
 				Object next = iterator.next();
-				tests.add(createTest(testMethod, toArray(next)));
+				tests.addAll(createTest(testMethod, toArray(next)));
 			}
 			return tests;
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -86,8 +90,10 @@ public class ParameterisedMethodTestFactory {
 		}
 	}
 	
-	private DynamicTest createTest(Method testMethod, Object[] args) {
-		return DynamicTest.dynamicTest(
+	private List<DynamicTest> createTest(Method testMethod, Object[] args) {
+		if (testMethod.getDeclaredAnnotation(Disabled.class) != null)
+			return emptyList();
+		return asList(dynamicTest(
 				generateTestName(testMethod, args),
 				() -> {
 					try {
@@ -100,13 +106,13 @@ public class ParameterisedMethodTestFactory {
 					} catch (Throwable t) {
 						throw t;
 					}
-				});
+				}));
 	}
 	
 	public String generateTestName(Method method, Object[] args) {
 		DisplayName displayName = method.getAnnotation(DisplayName.class);
 		if (displayName != null)
-			return String.format(displayName.value(), args);
+			return format(displayName.value(), args);
 		StringBuilder testName = new StringBuilder(method.getName());
 		for(Object arg: args)
 			testName.append(" ").append(arg);

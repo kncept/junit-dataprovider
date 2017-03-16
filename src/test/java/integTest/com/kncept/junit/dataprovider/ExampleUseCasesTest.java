@@ -11,6 +11,8 @@ import java.time.DayOfWeek;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -50,6 +52,21 @@ public class ExampleUseCasesTest {
 		assertEquals(
 				dayName.substring(1).toLowerCase(),
 				dayName.substring(1));
+	}
+	
+	@ParameterisedTest(source = "daysOfTheWeek")
+	@Disabled
+	public void canTranslateToLatin(String dayName) {
+		Assertions.fail("This test is disabled");
+		/*
+		dies Solis
+		dies Lunae
+		dies Martis
+		dies Mercurii
+		dies Iovis
+		dies Veneris
+		dies Saturni
+		 */
 	}
 	
 	

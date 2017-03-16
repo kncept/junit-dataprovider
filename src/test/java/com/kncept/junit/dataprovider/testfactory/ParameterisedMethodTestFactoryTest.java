@@ -4,12 +4,13 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class ParameterisedMethodTestFactoryTest {
 	
 	@Test
 	public void canFindTestMethods() {
-		assertEquals(3, testFactory.getParameterisedTestMethods().size());
+		assertEquals(4, testFactory.getParameterisedTestMethods().size());
 	}
 	
 	@Test
@@ -43,7 +44,7 @@ public class ParameterisedMethodTestFactoryTest {
 	
 	@Test
 	public void throwsExceptionOnInvalidSourceMethodLookup() {
-		IllegalArgumentException exception = Assertions.assertThrows(
+		IllegalArgumentException exception = assertThrows(
 				IllegalArgumentException.class,
 				() -> testFactory.parameterSourceMethod("xxInvalidName"));
 		assertEquals("No ParameterSource called xxInvalidName", exception.getMessage());
@@ -92,6 +93,15 @@ public class ParameterisedMethodTestFactoryTest {
 				() ->tests.get(0).getExecutable().execute());
 	}
 	
+	@Test
+	public void disabledTestsAreIgnored() throws Throwable {
+		List<DynamicTest> tests = testFactory.createTests(
+				getClass().getMethod("disabledTest", int.class),
+				getClass().getMethod("paramSource"));
+		assertTrue(tests.isEmpty());
+	}
+	
+	
 	@ParameterSource(name = "source")
 	public List<Object[]> paramSource() {
 		return asList(
@@ -102,20 +112,21 @@ public class ParameterisedMethodTestFactoryTest {
 	
 	@ParameterisedTest(source = "source")
 	@DisplayName("parameterisedTest with display name %d")
-	public void parameterisedTest(int val) {
-	}
+	public void parameterisedTest(int val) { }
 	
 	@ParameterisedTest(source = "source")
-	public void noDisplayName(int val) {
-	}
+	public void noDisplayName(int val) { }
 	
 	@ParameterisedTest(source = "source")
 	public void throwsException(int val) {
 		throw new TestException();
 	}
 	
+	@ParameterisedTest(source = "source")
+	@Disabled
+	public void disabledTest(int val) { }
+	
 	public static class TestException extends RuntimeException {
-		
 	}
 	
 }
