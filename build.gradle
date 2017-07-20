@@ -3,8 +3,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
-        classpath 'com.kncept.junit5.reporter:junit-reporter:0.9.1-M3'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M6'
+        classpath 'com.kncept.junit5.reporter:junit-reporter:1.0.0'
     }
 }
 
@@ -23,7 +23,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'com.kncept.junit5.dataprovider'
-version = '0.9.3-M3'
+version = '0.9.3-M6'
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -67,7 +67,7 @@ signArchives.onlyIf {new File('gradle.properties').exists()}
 
 task wrapper(type: Wrapper) {
 	description = 'gradlew'
-	gradleVersion = '3.4'
+	gradleVersion = '4.0.1'
 }
 
 repositories {
@@ -131,6 +131,6 @@ uploadArchives {
 }
 
 dependencies {
-	compile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
-	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M3'
+	compile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M6'
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M6'
 }
