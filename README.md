@@ -1,4 +1,7 @@
 # junit-dataprovider [![Build Status](https://travis-ci.org/kncept/junit-dataprovider.svg?branch=master)](https://travis-ci.org/kncept/junit-dataprovider)
+
+## This plugin is outdated. JUnit5 contains this functionality in its core
+
 Dataprovider like functionality for JUnit5.
 
 See [ExampleUseCasesTest](src/test/java/integTest/com/kncept/junit/dataprovider/ExampleUseCasesTest.java) for a more detailed example.
